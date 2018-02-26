@@ -1,0 +1,12 @@
+eadc465d0a2d605fb313a624cebd652b *DESCRIPTION
+acdc7ec8ae102b76c9e3d0185f33b76c *NAMESPACE
+c7e337865b2eb866e4f5cb779181d820 *R/remove_pages.R
+4f5ccc603df5cc1563ab2d5c5b5f0948 *R/rename_files.R
+1e990f6b006c4e1c10d238cc543d63d6 *R/split_pdf.R
+074ac850e5481eb1f3db118fcdf1ea84 *R/staple_pdf.R
+e0b7f51372da706d54fba37273e0c50c *R/staplr.R
+88b8b08b65a07bf0315fe5c9c0dc389e *man/remove_pages.Rd
+eb7578b56e735c75388b377262c33160 *man/rename_files.Rd
+e682a9d14891c543ab7d3146664a3179 *man/split_pdf.Rd
+3f816283c58bf2b8f220b0b1c46bbf2f *man/staple_pdf.Rd
+08181cdbc0ebe986f3d3ca428b3a4cff *man/staplr.Rd
