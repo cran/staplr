@@ -1,4 +1,4 @@
-#' Splits a single input PDF document into individual pages.
+#' Splits single input PDF document into individual pages.
 #'
 #' @description If the toolkit Pdftk is available in the
 #' system, it will be called to Split a single input PDF document
@@ -9,14 +9,16 @@
 #' The default is set to NULL. IF NULL, it  prompt the user to
 #' select the folder interactively.
 #' @param output_directory the path of the output directory
+#' @param prefix A string for output filename prefix
 #' @return this function splits a single input PDF document into
 #' individual pages
+#' @author Priyanga Dilini Talagala and Ogan Mancarci
 #' @examples
 #' \dontrun{
 #' split_pdf()
 #' }
 #'
-#' \dontshow{
+#' \dontrun{
 #' dir <- tempdir()
 #' require(lattice)
 #' for(i in 1:3) {
@@ -24,13 +26,13 @@
 #' print(xyplot(iris[,1] ~ iris[,i], data = iris))
 #' dev.off()
 #' }
-#' staple_pdf(input_directory = dir, output_directory = dir)
+#' staple_pdf(input_directory = dir, output_filepath = file.path(dir, 'Full_pdf.pdf'))
 #' split_pdf(input_filepath = file.path(dir, paste("Full_pdf.pdf",  sep = "")),output_directory = dir )
 #' }
 #' @export
 #' @import utils
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
-split_pdf <- function(input_filepath = NULL, output_directory = NULL) {
+split_pdf <- function(input_filepath = NULL, output_directory = NULL, prefix = 'page_') {
 
   if(is.null(input_filepath)){
     #Choose the pdf file interactively
@@ -42,14 +44,26 @@ split_pdf <- function(input_filepath = NULL, output_directory = NULL) {
     output_directory<- tcltk::tk_choose.dir(caption = "Select directory to save output")
   }
 
+  # Getting the page count to add the correct amout of zeroes to make it scalable
+  metadataTemp <- tempfile()
+  # Construct a system command to pdftk to get number of pages
+  system_command <- paste("pdftk",
+                          shQuote(input_filepath),
+                          "dump_data",
+                          "output",
+                          shQuote(metadataTemp))
+  system(command = system_command)
+  page_length <- as.numeric(stringr::str_extract(grep( "NumberOfPages", paste0(readLines(metadataTemp)),
+                                                       value = TRUE), "\\d+$"))
+  digits <- max(floor(log(page_length)),4)
+
+
   # Take the filepath arguments and format them for use in a system command
-  output_filepath <- paste0('"', output_directory,"/page_%04d.pdf", '"')
-  quoted_names <- paste0('"', input_filepath, '"')
-  input_filepath <- paste(quoted_names, collapse = " ")
+  output_filepath <- shQuote(paste0(output_directory, "/", prefix, "%0",digits,"d.pdf"))
 
   # Construct a system command to pdftk
   system_command <- paste("pdftk",
-                          input_filepath,
+                          shQuote(input_filepath),
                           "burst",
                           "output",
                           output_filepath,

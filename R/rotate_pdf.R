@@ -1,25 +1,25 @@
-#' Remove selected pages from a file
+#' Rotate entire pdf document
 #'
 #' @description If the toolkit Pdftk is available in the
-#' system, it will be called to remove the given pages from
-#' the seleted PDF files.
+#' system, it will be called to rotate the entire PDF document
 #'
 #' See the reference for detailed usage of \code{pdftk}.
-#' @param rmpages a vector of page numbers to be removed
+#' @param page_rotation An integer value from the vector c(0, 90, 180, 270).
+#' Each option sets the page rotation as follows (in degrees):
+#' north: 0, east: 90, south: 180, west: 270
 #' @param input_filepath the path of the input PDF file.
 #' The default is set to NULL. IF NULL, it  prompt the user to
 #' select the folder interactively.
 #' @param output_filepath the path of the output output PDF file.
 #' The default is set to NULL. IF NULL, it  prompt the user to
 #' select the folder interactivelye.
-#' @return this function returns a PDF document with the
-#' remaining pages
+#' @return this function returns a PDF document with the rotated pages
 #' @author Priyanga Dilini Talagala
 #' @examples
 #' \dontrun{
 #' # This command promts the user to select the file interactively.
-#' # Remove page 2 and 3 from the selected file.
-#' remove_pages(rmpages = c(3,6))
+#' # Rotate the entire PDF document to 90 degrees clockwise
+#' rotate_pdf(page_rotation = 90)
 #' }
 #'
 #' \dontrun{
@@ -33,58 +33,37 @@
 #' output_file <- file.path(dir, paste('Full_pdf.pdf',  sep = ""))
 #' staple_pdf(input_directory = dir, output_file)
 #' input_path <- file.path(dir, paste("Full_pdf.pdf",  sep = ""))
-#' output_path <-  file.path(dir, paste("trimmed_pdf.pdf",  sep = ""))
-#' remove_pages(rmpages = 1, input_path, output_path)
+#' output_path <-  file.path(dir, paste("rotated_pdf.pdf",  sep = ""))
+#' rotate_pdf( page_rotation = 90,  input_path, output_path)
 #' }
 #' @export
-#' @import utils
-#' @importFrom  stringr str_extract
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
-remove_pages <- function(rmpages, input_filepath = NULL, output_filepath = NULL) {
+rotate_pdf <- function(page_rotation = c(0, 90, 180, 270),  input_filepath = NULL, output_filepath = NULL) {
 
-  assertthat::assert_that(is.numeric(rmpages))
+  page_rotation <- match.arg(page_rotation)
 
   if(is.null(input_filepath)){
     #Choose the pdf file interactively
     input_filepath <- file.choose(new = FALSE)
   }
 
-  metadataTemp <- tempfile()
-
-  # Construct a system command to pdftk to get number of pages
-  system_command <- paste("pdftk",
-                          shQuote(input_filepath),
-                          "dump_data",
-                          "output",
-                          shQuote(metadataTemp))
-
-  system(command = system_command)
-
-  page_length <- as.numeric(stringr::str_extract(grep( "NumberOfPages", paste0(readLines(metadataTemp)),
-                                             value = TRUE), "\\d+$"))
-
-  total <- 1:page_length
-
-  keep <- total[-rmpages]
-  selected_pages <- split(keep, cumsum(seq_along(keep) %in%
-                                      (which(diff(keep)>1)+1)))
-  f<-function(x){paste(min(x),"-",max(x),sep = "")}
-  selected_pages <- lapply(selected_pages,f)
 
   if(is.null(output_filepath)){
     #Choose output file interactively
     output_filepath <-  tcltk::tclvalue(tcltk::tkgetSaveFile(filetypes = '{Pdf {.pdf}}'))
   }
 
+  rotation <- c("1-endnorth", "1-endeast", "1-endsouth", "1-endwest" )[match(page_rotation,c(0,90,180,270))]
 
   # Construct a system command to pdftk
   system_command <- paste("pdftk",
                           shQuote(input_filepath),
                           "cat",
-                          paste(unlist(selected_pages),collapse=" "),
+                          rotation,
                           "output",
                           shQuote(output_filepath),
                           sep = " ")
   # Invoke the command
   system(command = system_command)
+
 }

@@ -4,17 +4,19 @@
 \alias{staple_pdf}
 \title{Merge multiple PDF files into one}
 \usage{
-staple_pdf(input_directory = NULL, output_filename = "Full_pdf",
-  output_directory = NULL)
+staple_pdf(input_directory = NULL, input_files = NULL,
+  output_filepath = NULL)
 }
 \arguments{
 \item{input_directory}{the path of the input PDF files.
-The default is set to NULL. IF NULL, it  prompt the user to
+The default is set to NULL. If NULL, it  prompt the user to
 select the folder interactively.}
 
-\item{output_filename}{the name of the output file.}
+\item{input_files}{a vector of input PDF files. The default is set to NULL. If NULL and \code{input_directory} is also NULL, the user is propted to select a folder interactively.}
 
-\item{output_directory}{the path of the output directory}
+\item{output_filepath}{the path of the output output PDF file.
+The default is set to NULL. IF NULL, it  prompt the user to
+select the folder interactively.}
 }
 \value{
 this function returns a combined PDF document
@@ -30,7 +32,7 @@ See the reference for detailed usage of \code{pdftk}.
 staple_pdf()
 }
 
-\dontshow{
+\dontrun{
 dir <- tempdir()
 require(lattice)
 for(i in 1:3) {
@@ -38,9 +40,13 @@ pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 print(xyplot(iris[,1] ~ iris[,i], data = iris))
 dev.off()
 }
-staple_pdf(input_directory = dir, output_directory = dir)
+output_file <- file.path(dir, paste('Full_pdf.pdf',  sep = ""))
+staple_pdf(input_directory = dir, output_file)
 }
 }
 \references{
 \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
+}
+\author{
+Priyanga Dilini Talagala and Daniel Padfield
 }

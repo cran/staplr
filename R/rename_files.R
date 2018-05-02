@@ -8,6 +8,7 @@
 #' select the folder interactively.
 #' @param new_names a vector of names for the output files.
 #' @return this function writes renamed files back to directory
+#' @author Priyanga Dilini Talagala
 #' @examples
 #' \dontrun{
 #' #if the directory contains 3 PDF files
@@ -26,11 +27,11 @@
 #' }
 #' @export
 #' @importFrom tcltk tk_choose.dir
+#' @importFrom assertthat assert_that
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
 rename_files <- function(input_directory = NULL, new_names) {
-  if(is.null(new_names)){
-    stop()
-  }
+  assertthat::assert_that(is.character(new_names))
+
   if(is.null(input_directory)){
     #Choose a folder interactively
     input_directory<- tcltk::tk_choose.dir(caption = "Select directory which contains PDF fies")
