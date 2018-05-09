@@ -1,7 +1,7 @@
 Package: staplr
 Type: Package
 Title: A Toolkit for PDF Files
-Version: 2.1.0
+Version: 2.2.0
 Depends: R (>= 3.4.0)
 Maintainer: Priyanga Dilini Talagala <dilini.talagala@monash.edu>
 Authors@R: c(
@@ -22,13 +22,13 @@ License: GPL-3
 LazyData: true
 RoxygenNote: 6.0.1
 Imports: tcltk, stringr, assertthat
-Suggests: lattice
+Suggests: lattice, testthat, pdftools
 Encoding: UTF-8
 BugReports: https://github.com/pridiltal/staplr/issues
 NeedsCompilation: no
-Packaged: 2018-05-01 23:46:03 UTC; Priyanga
+Packaged: 2018-05-09 00:08:40 UTC; Priyanga
 Author: Priyanga Dilini Talagala [aut, cre],
   Ogan Mancarci [aut],
   Daniel Padfield [aut]
 Repository: CRAN
-Date/Publication: 2018-05-02 03:51:19 UTC
+Date/Publication: 2018-05-09 03:46:29 UTC
