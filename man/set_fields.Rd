@@ -4,7 +4,8 @@
 \alias{set_fields}
 \title{Set fields of a pdf form}
 \usage{
-set_fields(input_filepath = NULL, output_filepath = NULL, fields)
+set_fields(input_filepath = NULL, output_filepath = NULL, fields,
+  overwrite = TRUE)
 }
 \arguments{
 \item{input_filepath}{the path of the input PDF file. The default is set to
@@ -16,9 +17,15 @@ NULL. IF NULL, it  prompt the user to select the folder interactively.}
 \item{fields}{Fields returned from \code{\link{get_fields}} function. To make
 changes in a PDF, edit the \code{values} component of an element within
 this list}
+
+\item{overwrite}{If a file exists in \code{output_filepath}, should it be overwritten.}
 }
 \description{
-Set fields of a pdf form
+If the toolkit Pdftk is available in the
+system, it will be called to fill a pdf form with given a list of fields.
+List of fields can be acquired by \code{\link{get_fields}} function.
+
+See the reference for detailed usage of \code{pdftk}.
 }
 \examples{
 \dontrun{
@@ -33,6 +40,9 @@ fields$checkBox$value = 'Yes'
 set_fields(pdfFile,'filledPdf.pdf',fields)
 }
 
+}
+\references{
+\url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
 }
 \seealso{
 \code{\link{get_fields}}

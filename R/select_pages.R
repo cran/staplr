@@ -1,24 +1,22 @@
-#' Rotate entire pdf document
+#' Select pages from a file
 #'
 #' @description If the toolkit Pdftk is available in the
-#' system, it will be called to rotate the entire PDF document
+#' system, it will be called to combine the selected pages
+#' in a new pdf file.
 #'
 #' See the reference for detailed usage of \code{pdftk}.
-#' @param page_rotation An integer value from the vector c(0, 90, 180, 270).
-#' Each option sets the page orientation as follows:
-#' north: 0, east: 90, south: 180, west: 270. Note that the orientation cannot be
-#' cummulatively changed (eg. 90 (east) will always turn the page so the beginning
-#' of the page is on the right side)
+#' @param selpages a vector of page numbers to be selected
 #' @inheritParams input_filepath
 #' @inheritParams output_filepath
 #' @inheritParams overwrite
-#' @return this function returns a PDF document with the rotated pages
-#' @author Priyanga Dilini Talagala
+#' @return this function returns a PDF document with the
+#' remaining pages
+#' @author Granville Matheson, Priyanga Dilini Talagala
 #' @examples
 #' \dontrun{
 #' # This command prompts the user to select the file interactively.
-#' # Rotate the entire PDF document to 90 degrees clockwise
-#' rotate_pdf(page_rotation = 90)
+#' # Select page 3 and 6 from the selected file.
+#' select_pages(selpages = c(3,6))
 #' }
 #'
 #' \dontrun{
@@ -32,20 +30,21 @@
 #' output_file <- file.path(dir, paste('Full_pdf.pdf',  sep = ""))
 #' staple_pdf(input_directory = dir, output_file)
 #' input_path <- file.path(dir, paste("Full_pdf.pdf",  sep = ""))
-#' output_path <-  file.path(dir, paste("rotated_pdf.pdf",  sep = ""))
-#' rotate_pdf( page_rotation = 90,  input_path, output_path)
+#' output_path <-  file.path(dir, paste("trimmed_pdf.pdf",  sep = ""))
+#' select_pages(selpages = 1, input_path, output_path)
 #' }
 #' @export
+#' @import utils
+#' @importFrom  stringr str_extract
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
-rotate_pdf <- function(page_rotation = c(0, 90, 180, 270),  input_filepath = NULL, output_filepath = NULL, overwrite = TRUE) {
+select_pages <- function(selpages, input_filepath = NULL, output_filepath = NULL, overwrite = TRUE) {
 
-  page_rotation <- match.arg(as.character(page_rotation),c(0, 90, 180, 270))
+  assertthat::assert_that(is.numeric(selpages))
 
   if(is.null(input_filepath)){
     #Choose the pdf file interactively
     input_filepath <- file.choose(new = FALSE)
   }
-
 
   if(is.null(output_filepath)){
     #Choose output file interactively
@@ -55,13 +54,33 @@ rotate_pdf <- function(page_rotation = c(0, 90, 180, 270),  input_filepath = NUL
   input_filepath <- normalizePath(input_filepath, mustWork = TRUE)
   output_filepath <- normalizePath(output_filepath, mustWork = FALSE)
 
-  rotation <- c("1-endnorth", "1-endeast", "1-endsouth", "1-endwest" )[match(page_rotation,c(0,90,180,270))]
+  metadataTemp <- tempfile()
+
+  # Construct a system command to pdftk to get number of pages
+  system_command <- paste("pdftk",
+                          shQuote(input_filepath),
+                          "dump_data",
+                          "output",
+                          shQuote(metadataTemp))
+
+  system(command = system_command)
+
+  page_length <- as.numeric(stringr::str_extract(grep( "NumberOfPages", paste0(readLines(metadataTemp)),
+                                                       value = TRUE), "\\d+$"))
+
+  total <- 1:page_length
+
+  keep <- total[selpages]
+  selected_pages <- split(keep, cumsum(seq_along(keep) %in%
+                                         (which(diff(keep)>1)+1)))
+  f<-function(x){paste(min(x),"-",max(x),sep = "")}
+  selected_pages <- lapply(selected_pages,f)
 
   # Construct a system command to pdftk
   system_command <- paste("pdftk",
                           shQuote(input_filepath),
                           "cat",
-                          rotation,
+                          paste(unlist(selected_pages),collapse=" "),
                           "output",
                           "{shQuote(output_filepath)}",
                           sep = " ")
@@ -69,6 +88,4 @@ rotate_pdf <- function(page_rotation = c(0, 90, 180, 270),  input_filepath = NUL
   fileIO(input_filepath = input_filepath,
          output_filepath = output_filepath,
          overwrite = overwrite,
-         system_command = system_command)
-
-}
+         system_command = system_command)}

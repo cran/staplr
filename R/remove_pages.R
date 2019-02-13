@@ -6,18 +6,15 @@
 #'
 #' See the reference for detailed usage of \code{pdftk}.
 #' @param rmpages a vector of page numbers to be removed
-#' @param input_filepath the path of the input PDF file.
-#' The default is set to NULL. IF NULL, it  prompt the user to
-#' select the folder interactively.
-#' @param output_filepath the path of the output output PDF file.
-#' The default is set to NULL. IF NULL, it  prompt the user to
-#' select the folder interactivelye.
+#' @inheritParams input_filepath
+#' @inheritParams output_filepath
+#' @inheritParams overwrite
 #' @return this function returns a PDF document with the
 #' remaining pages
 #' @author Priyanga Dilini Talagala
 #' @examples
 #' \dontrun{
-#' # This command promts the user to select the file interactively.
+#' # This command prompts the user to select the file interactively.
 #' # Remove page 2 and 3 from the selected file.
 #' remove_pages(rmpages = c(3,6))
 #' }
@@ -40,7 +37,7 @@
 #' @import utils
 #' @importFrom  stringr str_extract
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
-remove_pages <- function(rmpages, input_filepath = NULL, output_filepath = NULL) {
+remove_pages <- function(rmpages, input_filepath = NULL, output_filepath = NULL, overwrite = TRUE) {
 
   assertthat::assert_that(is.numeric(rmpages))
 
@@ -48,6 +45,14 @@ remove_pages <- function(rmpages, input_filepath = NULL, output_filepath = NULL)
     #Choose the pdf file interactively
     input_filepath <- file.choose(new = FALSE)
   }
+
+  if(is.null(output_filepath)){
+    #Choose output file interactively
+    output_filepath <-  tcltk::tclvalue(tcltk::tkgetSaveFile(filetypes = '{Pdf {.pdf}}'))
+  }
+
+  input_filepath <- normalizePath(input_filepath, mustWork = TRUE)
+  output_filepath <- normalizePath(output_filepath, mustWork = FALSE)
 
   metadataTemp <- tempfile()
 
@@ -71,20 +76,18 @@ remove_pages <- function(rmpages, input_filepath = NULL, output_filepath = NULL)
   f<-function(x){paste(min(x),"-",max(x),sep = "")}
   selected_pages <- lapply(selected_pages,f)
 
-  if(is.null(output_filepath)){
-    #Choose output file interactively
-    output_filepath <-  tcltk::tclvalue(tcltk::tkgetSaveFile(filetypes = '{Pdf {.pdf}}'))
-  }
-
-
   # Construct a system command to pdftk
-  system_command <- paste("pdftk",
-                          shQuote(input_filepath),
-                          "cat",
-                          paste(unlist(selected_pages),collapse=" "),
-                          "output",
-                          shQuote(output_filepath),
-                          sep = " ")
-  # Invoke the command
-  system(command = system_command)
+  system_command <-
+    paste("pdftk",
+          shQuote(input_filepath),
+          "cat",
+          paste(unlist(selected_pages),collapse=' '), "output",
+          "{shQuote(output_filepath)}")
+
+
+  fileIO(input_filepath = input_filepath,
+         output_filepath = output_filepath,
+         overwrite = overwrite,
+         system_command = system_command)
+
 }
