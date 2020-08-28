@@ -1,9 +1,8 @@
 Package: staplr
 Type: Package
 Title: A Toolkit for PDF Files
-Version: 3.0.0
+Version: 3.1.0
 Depends: R (>= 3.4.0)
-Maintainer: Priyanga Dilini Talagala <pritalagala@gmail.com>
 Authors@R: c(
     person("Priyanga Dilini", "Talagala", email="pritalagala@gmail.com", role= c("aut","cre")),
     person("Ogan", "Mancarci", email="ogan.mancarci@gmail.com", role='aut'),
@@ -20,19 +19,21 @@ Description: Provides function to manipulate PDF files:
     Select pages from a file;
     splits single input PDF document into individual pages;
     splits single input PDF document into parts from given points.
-    'staplr' requires a Java installation on your system.
+    'staplr' requires Java 8 installed on your system.
+SystemRequirements: Java 8 or higher
 License: GPL-3
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Imports: tcltk, stringr, assertthat, glue, XML, rJava
 Suggests: lattice, testthat, pdftools
 Encoding: UTF-8
 BugReports: https://github.com/pridiltal/staplr/issues
 NeedsCompilation: no
-Packaged: 2020-07-22 01:32:52 UTC; priyangatalagala
+Packaged: 2020-08-24 23:12:55 UTC; priyangatalagala
 Author: Priyanga Dilini Talagala [aut, cre],
   Ogan Mancarci [aut],
   Daniel Padfield [aut],
   Granville Matheson [aut]
+Maintainer: Priyanga Dilini Talagala <pritalagala@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-07-22 13:40:02 UTC
+Date/Publication: 2020-08-28 11:00:03 UTC

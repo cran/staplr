@@ -63,7 +63,8 @@ pdftk_cmd <- function(){
     return(custom_pdftk)
   }
 
-  rJava::.jinit()
+
+
   jOptions = getOption('staplr_java_options')
   if(is.null(jOptions)){
     jOptions = ''

@@ -1,7 +1,8 @@
-af42c77db28eb3557c5a1208e6505524 *DESCRIPTION
+0377a10c275886462b14f54655016ff8 *DESCRIPTION
 b4e17c1cb83218d58f298eeb38fc4b24 *NAMESPACE
-b2e286728e263a69320a4ae0e8a05bb4 *R/fileIO.R
-5eb3f82e6e837123d779eb185fc9dda3 *R/fill_pdf.R
+71421fb9e71900cfae4b88fb20aaccf3 *R/fileIO.R
+4fca21e1d196639b06ae477b15d8a03d *R/fill_pdf.R
+987c850f04f5469099f6e1f056c9f127 *R/onload.R
 8da434d46f2f8b2a54ca5f4c3bdda930 *R/remove_pages.R
 31c6e5705de68b909ba4d5082af6a744 *R/rename_files.R
 297c865cd40c997fc065d166e99a12a0 *R/rotate_pages.R
@@ -284,7 +285,7 @@ c890f38042f3bb66a668aa3d95c9e968 *man/output_filepath.Rd
 42e5374a419ffea3cc5e087c7c522fa9 *man/rotate_pages.Rd
 0bf9706e72e11bd529e0f20e77e760b2 *man/rotate_pdf.Rd
 74ba86e5580df6b523ebcc535292a48f *man/select_pages.Rd
-a3c564a57326986453e333ee3628468e *man/set_fields.Rd
+728536d0fd7c6777a218f0b5b5caf1f8 *man/set_fields.Rd
 cb4de20e4c9a3f2d2929c72c60d52d74 *man/split_from.Rd
 8e9c4362fdfe0bfd58863f0ff1f38dc3 *man/split_pdf.Rd
 2895b0e9e9b6b5426da08417876e82ab *man/staple_pdf.Rd
@@ -292,4 +293,4 @@ cb4de20e4c9a3f2d2929c72c60d52d74 *man/split_from.Rd
 6658ebac21a6c48db467fe621455da64 *tests/testthat.R
 a2b74e030920dd7799e037b396822a8e *tests/testthat/reverseFDF
 f55ab93f0fd46b93f52eb6dfb009d648 *tests/testthat/test_fill_pdf_internals.R
-321b75a8aeafc15435e745eda4a1ce64 *tests/testthat/test_general.R
+d45cdb55f4b169db19d6356df8513984 *tests/testthat/test_general.R
