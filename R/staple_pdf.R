@@ -10,16 +10,13 @@
 #' @param input_files a vector of input PDF files. The default is set to NULL. If NULL and \code{input_directory} is also NULL, the user is propted to select a folder interactively.
 #' @inheritParams output_filepath
 #' @inheritParams overwrite
-#' @return this function returns a combined PDF document
+#' @inherit return return
 #' @author Priyanga Dilini Talagala and Daniel Padfield
 #' @examples
-#' \dontrun{
-#' staple_pdf()
-#' }
 #'
-#' \dontrun{
 #' if (requireNamespace("lattice", quietly = TRUE)) {
-#' dir <- tempdir()
+#' dir <- tempfile()
+#' dir.create(dir)
 #' for(i in 1:3) {
 #' pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 #' print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
@@ -27,7 +24,6 @@
 #' }
 #' output_file <- file.path(dir, paste('Full_pdf.pdf',  sep = ""))
 #' staple_pdf(input_directory = dir, output_filepath = output_file)
-#' }
 #' }
 #' @export
 #' @importFrom tcltk tk_choose.dir
@@ -58,13 +54,17 @@ staple_pdf <- function(input_directory = NULL, input_files = NULL,
     stop(paste(output_filepath,'already exists. Set overwrite = TRUE to overwrite'))
   }
 
+
   # Construct a system command to pdftk
   system_command <- paste(pdftk_cmd(),
                           paste(shQuote(input_filepaths), collapse = " "),
                           "cat",
                           "output",
-                          shQuote(output_filepath),
+                          "{shQuote(output_filepath)}",
                           sep = " ")
+  fileIO(input_filepath = input_filepaths,
+         output_filepath = output_filepath,
+         overwrite = overwrite,
+         system_command = system_command)
 
-  system(command = system_command)
 }

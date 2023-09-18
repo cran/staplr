@@ -15,8 +15,7 @@ NULL. IF NULL, it  prompt the user to select the folder interactively.}
 \item{prefix}{A string for output filename prefix}
 }
 \value{
-this function splits a single input PDF document into
-individual pages
+TRUE if the operation was succesfful. FALSE if the operation fails.
 }
 \description{
 If the toolkit Pdftk is available in the
@@ -26,13 +25,10 @@ into individual pages.
 See the reference for detailed usage of \code{pdftk}.
 }
 \examples{
-\dontrun{
-split_pdf()
-}
 
-\dontrun{
 if (requireNamespace("lattice", quietly = TRUE)) {
-dir <- tempdir()
+dir <- tempfile()
+dir.create(dir)
 for(i in 1:3) {
 pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
@@ -40,7 +36,6 @@ dev.off()
 }
 staple_pdf(input_directory = dir, output_filepath = file.path(dir, 'Full_pdf.pdf'))
 split_pdf(input_filepath = file.path(dir, paste("Full_pdf.pdf",  sep = "")),output_directory = dir )
-}
 }
 }
 \references{

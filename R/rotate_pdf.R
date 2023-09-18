@@ -12,29 +12,23 @@
 #' @inheritParams input_filepath
 #' @inheritParams output_filepath
 #' @inheritParams overwrite
-#' @return this function returns a PDF document with the rotated pages
+#' @inherit return return
 #' @author Priyanga Dilini Talagala
 #' @examples
-#' \dontrun{
-#' # This command prompts the user to select the file interactively.
-#' # Rotate the entire PDF document to 90 degrees clockwise
-#' rotate_pdf(page_rotation = 90)
-#' }
 #'
-#' \dontrun{
 #' if (requireNamespace("lattice", quietly = TRUE)) {
-#' dir <- tempdir()
+#' dir <- tempfile()
+#' dir.create(dir)
 #' for(i in 1:3) {
 #' pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 #' print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
 #' dev.off()
 #' }
 #' output_file <- file.path(dir, paste('Full_pdf.pdf',  sep = ""))
-#' staple_pdf(input_directory = dir, output_file)
+#' staple_pdf(input_directory = dir, output_filepath = output_file)
 #' input_path <- file.path(dir, paste("Full_pdf.pdf",  sep = ""))
 #' output_path <-  file.path(dir, paste("rotated_pdf.pdf",  sep = ""))
 #' rotate_pdf( page_rotation = 90,  input_path, output_path)
-#' }
 #' }
 #' @export
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}

@@ -10,18 +10,13 @@
 #' @param output_directory the path of the output directory
 #' @param prefix A string for output filename prefix
 #' @inheritParams overwrite
-#' @return this function splits a single input PDF document into
-#' individual pages
+#' @inherit return return
 #' @author Priyanga Dilini Talagala and Ogan Mancarci
 #' @examples
-#' \dontrun{
-#' # Split the pdf from page 10
-#' split_from(pg_num=10)
-#' }
 #'
-#' \dontrun{
 #' if (requireNamespace("lattice", quietly = TRUE)) {
-#' dir <- tempdir()
+#' dir <- tempfile()
+#' dir.create(dir)
 #' for(i in 1:4) {
 #' pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 #' print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
@@ -30,7 +25,6 @@
 #' staple_pdf(input_directory = dir, output_filepath = file.path(dir, 'Full_pdf.pdf'))
 #' input_path <- file.path(dir, "Full_pdf.pdf")
 #' split_from(pg_num=2, input_filepath = input_path ,output_directory = dir )
-#' }
 #' }
 #' @export
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
@@ -73,7 +67,13 @@ split_from <- function(pg_num, input_filepath = NULL, output_directory = NULL, p
                             shQuote(output_filepath),
                             sep = " ")
 
-    system(command = system_command)
+    sys_out <- system(command = system_command)
+  }
+
+  if(sys_out == 0){
+    return(TRUE)
+  } else{
+    return(FALSE)
   }
 
 }

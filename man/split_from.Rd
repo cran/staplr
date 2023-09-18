@@ -25,8 +25,7 @@ NULL. IF NULL, it  prompt the user to select the folder interactively.}
 \item{overwrite}{If a file exists in \code{output_filepath}, should it be overwritten.}
 }
 \value{
-this function splits a single input PDF document into
-individual pages
+TRUE if the operation was succesfful. FALSE if the operation fails.
 }
 \description{
 If the toolkit Pdftk is available in the
@@ -36,14 +35,10 @@ into two parts from a given point
 See the reference for detailed usage of \code{pdftk}.
 }
 \examples{
-\dontrun{
-# Split the pdf from page 10
-split_from(pg_num=10)
-}
 
-\dontrun{
 if (requireNamespace("lattice", quietly = TRUE)) {
-dir <- tempdir()
+dir <- tempfile()
+dir.create(dir)
 for(i in 1:4) {
 pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
@@ -52,7 +47,6 @@ dev.off()
 staple_pdf(input_directory = dir, output_filepath = file.path(dir, 'Full_pdf.pdf'))
 input_path <- file.path(dir, "Full_pdf.pdf")
 split_from(pg_num=2, input_filepath = input_path ,output_directory = dir )
-}
 }
 }
 \references{

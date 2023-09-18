@@ -8,7 +8,7 @@ test_that('fill_pdf',{
 
   pdfFile <- system.file('simpleForm.pdf',package = 'staplr')
 
-  idenfity_form_fields(pdfFile,tempFile)
+  identify_form_fields(pdfFile,tempFile)
   pdfText = pdftools::pdf_text(tempFile)
   expect_true(grepl('TextField.*?TextField2.*?TextField3', pdfText))
 
@@ -70,8 +70,8 @@ test_that('fill_pdf',{
   fields$hierarchy2.child.node1$value <- 'second hierarchy child 1 node 1'
   fields$hierarchy2.child2.node2$value <- 'second hierarchy child 2 node 2'
 
-  fields$InterstingChar1$value <- "this field had weird content"
-  fields$InterstingChar2$value <- "this field had weirder content"
+  fields$InterestingChar1$value <- "this field had weird content"
+  fields$InterestingChar2$value <- "this field had weirder content"
 
   fields$`(weird) paranthesis`$value <- 'paranthesis is weird'
   fields$`weird Ñ characters`$value <- 'characters are weird'
@@ -104,12 +104,12 @@ test_that('fill_pdf',{
   expect_warning(get_fields(pdfFile),regexp = "some fields seems to include plain text UTF-8")
 
 
-  idenfity_form_fields(pdfFile,tempFile,convert_field_names = TRUE)
+  identify_form_fields(pdfFile,tempFile,convert_field_names = TRUE)
   pdfText = pdftools::pdf_text(tempFile)
   expect_true(grepl('TextFieldPage3', pdfText[[3]]))
 
 
-  idenfity_form_fields(pdfFile,tempFile,convert_field_names = TRUE)
+  identify_form_fields(pdfFile,tempFile,convert_field_names = TRUE)
   expect_error(set_fields(pdfFile,tempFile,fields,convert_field_names = FALSE),'')
 
 })

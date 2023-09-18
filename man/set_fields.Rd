@@ -31,6 +31,9 @@ you should set this to TRUE as well so the fields can be matched correctly.}
 
 \item{flatten}{If TRUE, the form fields will be flattened and turned into plain text.}
 }
+\value{
+TRUE if the operation was succesfful. FALSE if the operation fails.
+}
 \description{
 If the toolkit Pdftk is available in the
 system, it will be called to fill a pdf form with given a list of fields.
@@ -39,17 +42,16 @@ List of fields can be acquired by \code{\link{get_fields}} function.
 See the reference for detailed usage of \code{pdftk}.
 }
 \examples{
-\dontrun{
-pdfFile = system.file('testForm.pdf',package = 'staplr')
+pdfFile = system.file('simpleForm.pdf',package = 'staplr')
 fields = get_fields(pdfFile)
 
-fields$TextField1$value = 'this is text'
+fields$TextField$value = 'this is text'
 fields$TextField2$value = 'more text'
-fields$RadioGroup$value = 2
-fields$checkBox$value = 'Yes'
+fields$Checkbox$value = 'Yes'
 
-set_fields(pdfFile,'filledPdf.pdf',fields)
-}
+output <- tempfile(fileext = '.pdf')
+
+set_fields(pdfFile,output,fields)
 
 }
 \references{

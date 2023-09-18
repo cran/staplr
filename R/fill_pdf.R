@@ -232,15 +232,14 @@ fdfEdit <- function(fieldToFill,annotatedFDF){
 #' codes, the function will return a warning by default, suggesting setting \code{convert_field_names} to code{TRUE}.
 #' If \code{encoding_warning} is \code{FALSE}, these warnings will be silenced.
 #' @inheritParams overwrite
-#'
+#' @inherit return return
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' pdfFile = system.file('testForm.pdf',package = 'staplr')
-#' idenfity_form_fields(pdfFile, 'testOutput.pdf')
-#' }
-idenfity_form_fields <- function(input_filepath = NULL, output_filepath = NULL,
+#' output <- tempfile(fileext = '.pdf')
+#' pdfFile = system.file('simpleForm.pdf',package = 'staplr')
+#' identify_form_fields(pdfFile, output)
+identify_form_fields <- function(input_filepath = NULL, output_filepath = NULL,
                                  overwrite = TRUE,convert_field_names = FALSE,
                                  encoding_warning = TRUE){
   if(is.null(input_filepath)){
@@ -302,10 +301,8 @@ idenfity_form_fields <- function(input_filepath = NULL, output_filepath = NULL,
 #' @author Ogan Mancarci
 #' @seealso \code{link{set_fields}}
 #' @examples
-#' \dontrun{
-#' pdfFile = system.file('testForm.pdf',package = 'staplr')
+#' pdfFile = system.file('simpleForm.pdf',package = 'staplr')
 #' fields = get_fields(pdfFile)
-#' }
 #' @export
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
 #'
@@ -347,10 +344,10 @@ get_fields <- function(input_filepath = NULL, convert_field_names = FALSE, encod
   badFields = c()
 
   fields <- lapply(fields,function(x){
-    type <- stringr::str_extract(x,'(?<=FieldType: ).*?(?=\n|$)')
-    name <- stringr::str_extract(x,'(?<=FieldName: ).*?(?=\n|$)')
+    type <- stringr::str_extract(x,'(?<=\nFieldType: ).*?(?=\n|$)')
+    name <- stringr::str_extract(x,'(?<=\nFieldName: ).*?(?=\n|$)')
 
-    value <- stringr::str_extract_all(x,'(?<=FieldValue: ).*?(?=\n|$)')[[1]]
+    value <- stringr::str_extract_all(x,'(?<=\nFieldValue: )(.|\n)*?(?=(\nField)|(\n$))')[[1]]
     # sometimes there are multiple field values. It is currently unclear why this happens
     # but the example file I have only created the extra fieldValue when there was
     # an entry.
@@ -449,6 +446,7 @@ get_fdf_lines <- function(input_filepath,
 #'   changes in a PDF, edit the \code{values} component of an element within
 #'   this list
 #' @inheritParams overwrite
+#' @inherit return return
 #' @param convert_field_names If you set convert_field_names when using \code{\link{get_fields}}
 #' you should set this to TRUE as well so the fields can be matched correctly.
 #' @param flatten If TRUE, the form fields will be flattened and turned into plain text.
@@ -456,17 +454,16 @@ get_fdf_lines <- function(input_filepath,
 #' @author Ogan Mancarci
 #' @seealso \code{\link{get_fields}}
 #' @examples
-#' \dontrun{
-#' pdfFile = system.file('testForm.pdf',package = 'staplr')
+#' pdfFile = system.file('simpleForm.pdf',package = 'staplr')
 #' fields = get_fields(pdfFile)
 #'
-#' fields$TextField1$value = 'this is text'
+#' fields$TextField$value = 'this is text'
 #' fields$TextField2$value = 'more text'
-#' fields$RadioGroup$value = 2
-#' fields$checkBox$value = 'Yes'
+#' fields$Checkbox$value = 'Yes'
 #'
-#' set_fields(pdfFile,'filledPdf.pdf',fields)
-#' }
+#' output <- tempfile(fileext = '.pdf')
+#'
+#' set_fields(pdfFile,output,fields)
 #'
 #' @references \url{https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/}
 #'

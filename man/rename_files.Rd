@@ -14,20 +14,17 @@ select the folder interactively.}
 \item{new_names}{a vector of names for the output files.}
 }
 \value{
-this function writes renamed files back to directory
+A logical vector indicating which files were successfully renamed.
 }
 \description{
 Rename multiple files in a directory and
 write renamed files back to directory
 }
 \examples{
-\dontrun{
-#if the directory contains 3 PDF files
-rename_files(new_names = paste("file",1:3))
-}
 \dontshow{
 if (requireNamespace("lattice", quietly = TRUE)) {
-dir <- tempdir()
+dir <- tempfile()
+dir.create(dir)
 for(i in 1:3) {
 pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))

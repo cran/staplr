@@ -8,17 +8,13 @@
 #' @inheritParams input_filepath
 #' @param output_directory the path of the output directory
 #' @param prefix A string for output filename prefix
-#' @return this function splits a single input PDF document into
-#' individual pages
+#' @inherit return return
 #' @author Priyanga Dilini Talagala and Ogan Mancarci
 #' @examples
-#' \dontrun{
-#' split_pdf()
-#' }
 #'
-#' \dontrun{
 #' if (requireNamespace("lattice", quietly = TRUE)) {
-#' dir <- tempdir()
+#' dir <- tempfile()
+#' dir.create(dir)
 #' for(i in 1:3) {
 #' pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 #' print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
@@ -26,7 +22,6 @@
 #' }
 #' staple_pdf(input_directory = dir, output_filepath = file.path(dir, 'Full_pdf.pdf'))
 #' split_pdf(input_filepath = file.path(dir, paste("Full_pdf.pdf",  sep = "")),output_directory = dir )
-#' }
 #' }
 #' @export
 #' @import utils
@@ -70,7 +65,13 @@ split_pdf <- function(input_filepath = NULL, output_directory = NULL, prefix = '
                           output_filepath,
                           sep = " ")
   # Invoke the command
-  system(command = system_command)
+  sys_out <- system(command = system_command)
+
+  if(sys_out == 0){
+    return(TRUE)
+  } else{
+    return(FALSE)
+  }
 
 }
 

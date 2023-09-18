@@ -24,7 +24,7 @@ NULL. IF NULL, it  prompt the user to select the folder interactively.}
 \item{overwrite}{If a file exists in \code{output_filepath}, should it be overwritten.}
 }
 \value{
-this function returns a combined PDF document
+TRUE if the operation was succesfful. FALSE if the operation fails.
 }
 \description{
 If the toolkit Pdftk is available in the
@@ -33,13 +33,10 @@ system, it will be called to merge the PDF files.
 See the reference for detailed usage of \code{pdftk}.
 }
 \examples{
-\dontrun{
-staple_pdf()
-}
 
-\dontrun{
 if (requireNamespace("lattice", quietly = TRUE)) {
-dir <- tempdir()
+dir <- tempfile()
+dir.create(dir)
 for(i in 1:3) {
 pdf(file.path(dir, paste("plot", i, ".pdf", sep = "")))
 print(lattice::xyplot(iris[,1] ~ iris[,i], data = iris))
@@ -47,7 +44,6 @@ dev.off()
 }
 output_file <- file.path(dir, paste('Full_pdf.pdf',  sep = ""))
 staple_pdf(input_directory = dir, output_filepath = output_file)
-}
 }
 }
 \references{
